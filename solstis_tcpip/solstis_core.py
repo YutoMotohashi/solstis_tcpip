@@ -111,6 +111,24 @@ class SolstisCore:
 
         return response
 
+    def _ping(self, transmission_id, text_in):
+        """
+        Parameters:
+        transmission_id: The ID for this transmission.
+        text_in: The text to be echoed back with switched lower-upper case.
+
+        Returns:
+        The response from the Solstis device as a dictionary. The response includes the following fields:
+        'text_out' - The echoed text with switched lower-upper case.
+        """
+        self.send_command(transmission_id, "ping", {"text_in": text_in})
+        response = self.receive_response()
+        self._verify_messsage(
+            response, op="ping_reply", transmission_id=transmission_id
+        )
+
+        return response
+
     def _set_wave_m(self, transmission_id, wavelength):
         """
         Parameters:
@@ -377,7 +395,8 @@ class SolstisCore:
     def _check_response(self, response):
         # switch depending on the operation
         operation = response["message"]["op"]
-        status = response["message"]["parameters"]["status"]
+        if "status" in response["message"]["parameters"]:
+            status = response["message"]["parameters"]["status"]
         if operation == "start_link_reply":
             if status == "ok":
                 pass
@@ -385,6 +404,8 @@ class SolstisCore:
                 raise SolstisError("Failed to start link.", severity=2)
             else:
                 raise SolstisError("Unknown error.", severity=2)
+        elif operation == "ping_reply":
+            pass
         elif operation == "set_wave_m_reply":
             if status == 0:
                 pass
@@ -500,6 +521,17 @@ class SolstisCore:
         """
         transmission_id = self._allocate_transmission_id()
         response = self._start_link(transmission_id, ip_address)
+        self._check_response(response)
+
+        return response
+
+    def ping(self, text_in: str):
+        """
+        Parameters:
+        text_in: The text to be echoed back with switched lower-upper case.
+        """
+        transmission_id = self._allocate_transmission_id()
+        response = self._ping(transmission_id, text_in)
         self._check_response(response)
 
         return response
@@ -649,6 +681,8 @@ def response_keys(op):
     """Returns the keys of the response dictionary for the given operation"""
     if op == "start_link":
         return ["status"]
+    elif op == "ping":
+        return ["text_out"]
     elif op == "set_wave_m":
         return ["status", "current_wavelength", "extended_zone"]
     elif op == "poll_wave_m":
@@ -722,6 +756,10 @@ class MockSolstisCore(SolstisCore):
         if op == "start_link":
             params_ret = {
                 "status": "ok",
+            }
+        elif op == "ping":
+            params_ret = {
+                "text_out": params["text_in"].swapcase(),
             }
         elif op == "set_wave_m":
             params_ret = {
