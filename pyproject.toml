@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "solstis-tcpip"
+version = "0.1.0"
+description = ""
+authors = ["Yuto Motohashi <ym544@cornell.edu>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^1.25.1"
+pytest = "^7.4.0"
+python-box = "^7.0.1"
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.24.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
