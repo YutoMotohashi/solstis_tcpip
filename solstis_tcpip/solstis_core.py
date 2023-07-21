@@ -1,7 +1,9 @@
 import json
 import socket
 from box import BoxList
-from solstis_constants import (
+import string
+
+from solstis_tcpip.solstis_constants import (
     Scan_Type,
     Scan_Type_Fast,
     Commands,
@@ -58,7 +60,8 @@ class SolstisCore:
             message = {"transmission_id": [transmission_id], "op": op}
         command = {"message": message}
         message_json = json.dumps(command)
-        self.connection.sendall(message_json.encode())
+        print(message_json)
+        self.connection.sendall(message_json.encode('ascii'))
 
     def receive_response(self):
         response = self.connection.recv(1024)  # Adjust the buffer size as needed.
@@ -1598,7 +1601,7 @@ class SolstisCore:
         kw_args = {}
         return self.command(14, **kw_args)
 
-    def ref_cavity_lock(self, operation: bool):
+    def cavity_lock(self, operation: bool):
         """
         Parameters:
         operation: The operation to perform. Can be True to apply the lock or False to remove it.
@@ -1607,7 +1610,7 @@ class SolstisCore:
         kw_args = {"operation": "on" if operation else "off"}
         return self.command(15, **kw_args)
 
-    def ref_cavity_lock_status(
+    def cavity_lock_status(
         self,
     ):
         """
@@ -1881,8 +1884,6 @@ class SolstisCore:
 
         kw_args = {
             "scan": Scan_Type_Fast(scan).lowercase_name,
-            "width": width,
-            "time": time,
         }
         return self.command(33, **kw_args)
 
