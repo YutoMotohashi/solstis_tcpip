@@ -2,6 +2,7 @@ import pytest
 from box import BoxList
 
 from solstis_core import SolstisCore, SolstisError
+from solstis_constants import Commands
 from utils import response_keys
 
 
@@ -55,7 +56,7 @@ class MockSolstisCore(SolstisCore):
             }
         elif op == "poll_wave_m":
             params_ret = {
-                "status": 0,
+                "status": 3,
                 "current_wavelength": 500,
                 "lock_status": 0,
                 "extended_zone": 0,
@@ -224,3 +225,15 @@ def test_solstiscore_without_comm1():
     solstis.fine_tune_resonator(setting=50)
 
     solstis.disconnect()
+
+
+def test_solstiscore1():
+    # Default movement
+    solstis = SolstisCore(server_ip="192.000.0.000", server_port=12345)
+
+    _command_keys = set(solstis._command.keys())
+    enum_values = set(e.value for e in Commands)
+
+    assert (
+        _command_keys == enum_values
+    ), "Keys in the dictionary do not match the values in the enum"
