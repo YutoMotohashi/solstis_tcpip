@@ -10,6 +10,7 @@ python = "^3.9"
 numpy = "^1.25.1"
 pytest = "^7.4.0"
 python-box = "^7.0.1"
+python-dotenv = "^1.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
