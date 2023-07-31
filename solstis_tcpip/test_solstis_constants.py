@@ -1,4 +1,4 @@
-from solstis_constants import (
+from solstis_tcpip.solstis_constants import (
     Scan_Type,
     Scan_Type_Fast,
     Commands,

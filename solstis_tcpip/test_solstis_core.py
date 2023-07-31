@@ -1,9 +1,9 @@
 import pytest
 from box import BoxList
 
-from solstis_core import SolstisCore, SolstisError
-from solstis_constants import Commands
-from utils import response_keys
+from solstis_tcpip.solstis_core import SolstisCore, SolstisError
+from solstis_tcpip.solstis_constants import Commands
+from solstis_tcpip.utils import response_keys
 
 
 class MockSolstisCore(SolstisCore):
