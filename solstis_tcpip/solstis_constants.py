@@ -154,7 +154,7 @@ class Commands(Enum):
         return None
 
 
-status_messages_severity = {
+status_messages_severity = dict({
     1: {  # set_wave_m_reply
         0: ("command successful", 0),
         1: ("no link to wavelength meter or no meter configured", 2),
@@ -408,4 +408,5 @@ status_messages_severity = {
     101: {  # ping_reply
         0: ("No message", 0),
     },
-}
+})
+

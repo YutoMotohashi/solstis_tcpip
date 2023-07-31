@@ -1380,6 +1380,8 @@ class SolstisCore:
         operation = response["message"]["op"]
         if "status" in response["message"]["parameters"]:
             status = response["message"]["parameters"]["status"]
+            if type(status)!=str:
+                status=status[0]
         else:
             status = 0
 
