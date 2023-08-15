@@ -20,7 +20,12 @@ class MockSolstisCore(SolstisCore):
         if self.connection is None:
             raise SolstisError("Not connected to the server.", severity=10)
 
+
         if params is not None:
+            # convert number to [number] to match the solstis format for each value in the params
+            for key, value in params.items():
+                if isinstance(value, (int, float)):
+                    params[key] = [value]
             message = {
                 "transmission_id": [transmission_id],
                 "op": op,
@@ -50,58 +55,58 @@ class MockSolstisCore(SolstisCore):
             }
         elif op == "set_wave_m":
             params_ret = {
-                "status": 0,
-                "current_wavelength": 500,
+                "status": [0],
+                "current_wavelength": [500],
                 "extended_zone": 0,
             }
         elif op == "poll_wave_m":
             params_ret = {
-                "status": 3,
-                "current_wavelength": 500,
+                "status": [3],
+                "current_wavelength": [500],
                 "lock_status": 0,
                 "extended_zone": 0,
             }
         elif op == "lock_wave_m":
             params_ret = {
-                "status": 0,
+                "status": [0],
             }
         elif op == "stop_wave_m":
             params_ret = {
-                "status": 0,
-                "current_wavelength": 500,
+                "status": [0],
+                "current_wavelength": [500],
             }
         elif op == "move_wave_t":
             params_ret = {
-                "status": 0,
+                "status": [0],
             }
         elif op == "poll_move_wave_t":
             params_ret = {
-                "status": 0,
-                "current_wavelength": 500,
+                "status": [0],
+                "current_wavelength": [500],
             }
         elif op == "stop_move_wave_t":
             params_ret = {
-                "status": 0,
+                "status": [0],
             }
         elif op == "tune_etalon":
             params_ret = {
-                "status": 0,
+                "status": [0],
             }
         elif op == "tune_cavity":
             params_ret = {
-                "status": 0,
+                "status": [0],
             }
         elif op == "fine_tune_cavity":
             params_ret = {
-                "status": 0,
+                "status": [0],
             }
         elif op == "tune_resonator":
             params_ret = {
-                "status": 0,
+                "status": [0],
             }
         elif op == "fine_tune_resonator":
             params_ret = {
-                "status": 0,
+                "status": [0],
             }
         else:
             raise ValueError("Unknown operation: " + op)
@@ -113,6 +118,7 @@ class MockSolstisCore(SolstisCore):
         }
 
         response = {"message": message}
+        print(response)
         return response
 
     def receive_response(self):

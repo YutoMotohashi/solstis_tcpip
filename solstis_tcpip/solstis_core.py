@@ -51,6 +51,11 @@ class SolstisCore:
             raise SolstisError("Not connected to the server.", severity=10)
 
         if params is not None:
+            # convert number to [number] to match the solstis format for each value in the params
+            for key, value in params.items():
+                if isinstance(value, (int, float)):
+                    params[key] = [value]
+
             message = {
                 "transmission_id": [transmission_id],
                 "op": op,
@@ -250,14 +255,6 @@ class SolstisCore:
         self._verify_messsage(
             response, op="move_wave_t_reply", transmission_id=transmission_id
         )
-
-        status = response["message"]["parameters"]["status"]
-        if status != 0:
-            error_messages = {1: "Command failed.", 2: "Wavelength out of range."}
-            raise SolstisError(
-                "Failed to move wavelength: "
-                + error_messages.get(status, "Unknown error")
-            )
 
         return response
 
